@@ -9,12 +9,28 @@ import streamlit as st
 from sklearn.preprocessing import MinMaxScaler
 
 # dataset dan model
-csv_url = './data_heart_Cleaned.csv'
-model_url = './models_ensemble_bagging.pkl'
+csv_url = 'https://github.com/difafisabill/Kelompok5_KampusMerdeka__PYTN_FP3_Hacktiv8/raw/main/data_heart_Cleaned.csv'
+model_url = 'https://github.com/difafisabill/Kelompok5_KampusMerdeka__PYTN_FP3_Hacktiv8/raw/main/models_ensemble_bagging.pkl'
 
-# model
-with open(model_url, 'rb') as file:
-    model = pickle.load(file)
+def download_model_from_url(model_url, save_path):
+    if model_url.startswith('http'):
+        response = requests.get(model_url)
+        with open(save_path, 'wb') as file:
+            file.write(response.content)
+    else:
+        shutil.copy(model_url, save_path)
+
+model_path = 'model.pkl'
+download_model_from_url(model_url, model_path)
+
+if os.path.exists(model_path):
+    with open(model_path, 'rb') as file:
+        model = pickle.load(file)
+else:
+    st.error("Failed to load Logistic Regression model.")
+
+
+
 
 
 # Tampilan
